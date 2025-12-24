@@ -10,13 +10,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-// use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 
 // =======================
 // CONTROLLERS (ADMIN)
 // =======================
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -99,3 +100,9 @@ Auth::routes();
 // Google Login
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+
+
+Route::middleware('auth')->group(function() {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});

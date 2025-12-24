@@ -45,7 +45,7 @@
 
                 @auth
                     {{-- Wishlist --}}
-                    {{-- <li class="nav-item">
+                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{{ route('wishlist.index') }}">
                             <i class="bi bi-heart"></i>
                             @if(auth()->user()->wishlists()->count() > 0)
@@ -54,7 +54,7 @@
                                 </span>
                             @endif
                         </a>
-                    </li> --}}
+                    </li>
 
                     {{-- Cart --}}
                     <li class="nav-item">

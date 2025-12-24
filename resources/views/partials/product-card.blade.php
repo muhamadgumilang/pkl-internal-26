@@ -22,11 +22,10 @@
 
         {{-- Wishlist Button --}}
         @auth
-            <button type="button"
-                    onclick="toggleWishlist({{ $product->id }})"
-                    class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 rounded-circle wishlist-btn-{{ $product->id }}">
-                <i class="bi {{ auth()->user()->hasInWishlist($product) ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
-            </button>
+            <button onclick="toggleWishlist({{ $product->id }})"
+        class="wishlist-btn-{{ $product->id }} btn btn-light btn-sm rounded-circle p-2 transition">
+    <i class="bi {{ Auth::check() && Auth::user()->hasInWishlist($product) ? 'bi-heart-fill text-danger' : 'bi-heart text-secondary' }} fs-5"></i>
+</button>
         @endauth
     </div>
 
