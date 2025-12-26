@@ -89,7 +89,7 @@ class LoginController extends Controller
 
         // Jika role-nya admin, arahkan ke dashboard admin
         if ($user->role === 'admin') {
-            return route('admin');
+            return route('admin.dashboard');
             // ↑ Menggunakan route helper lebih aman daripada hardcode URL '/admin/dashboard'
         }
 

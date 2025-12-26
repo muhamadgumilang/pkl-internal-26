@@ -33,7 +33,7 @@ use App\Http\Controllers\Auth\GoogleController;
 // HALAMAN PUBLIK
 // =======================
 //
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/products', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
