@@ -3,9 +3,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;   
-use Midtrans\Config;
-use Midtrans\Snap;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -38,52 +36,10 @@ class OrderController extends Controller
             abort(403, 'Anda tidak memiliki akses ke pesanan ini.');
         }
 
-        // Ambil snap_token dari database (jika ada)
-        // Jika kolom di DB namanya snap_token, kita ambil itu
-        $snapToken = $order->snap_token;
-
-        // Jika status masih pending DAN belum punya snap_token di database
-        if ($order->status === 'pending' && !$snapToken) {
-            // 1. Konfigurasi Midtrans
-            Config::$serverKey = config('midtrans.server_key');
-            Config::$isProduction = config('midtrans.is_production');
-            Config::$isSanitized = true;
-            Config::$is3ds = true;
-
-            // 2. Buat parameter transaksi
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->order_number,
-                    'gross_amount' => (int) $order->total_amount,
-                ],
-                'customer_details' => [
-                    'first_name' => auth()->user()->name,
-                    'email' => auth()->user()->email,
-                    'phone' => $order->shipping_phone,
-                ],
-                // TAMBAHKAN INI:
-                'callbacks' => [
-                    'finish' => route('orders.success', $order->id),
-                    'unfinish' => route('orders.show', $order->id),
-                    'error' => route('orders.show', $order->id),
-                ],
-            ];
-
-            try {
-                // 3. Minta token dari Midtrans
-                $snapToken = Snap::getSnapToken($params);
-
-                // 4. Simpan token ke database agar tidak request ulang terus-menerus
-                $order->update(['snap_token' => $snapToken]);
-            } catch (\Exception $e) {
-                // Jika gagal (misal server key salah), log errornya
-                \Log::error('Midtrans Error: ' . $e->getMessage());
-            }
-        }
         // 2. Load relasi detail
         // Kita butuh data items dan gambar produknya untuk ditampilkan di invoice view.
         $order->load(['items.product', 'items.product.primaryImage']);
 
-        return view('orders.show', compact('order', 'snapToken'));
+        return view('orders.show', compact('order'));
     }
 }
