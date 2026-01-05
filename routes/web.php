@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\LoginController;
 
 // =======================
 // CONTROLLERS (ADMIN)
@@ -22,6 +23,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReportController;
+
 
 
 // =======================
@@ -80,17 +83,25 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])
-            ->name('dashboard');
+        // Admin Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // nama route: admin.dashboard
+        // url: /admin/dashboard
 
+        // Produk
         Route::resource('products', AdminProductController::class);
+
+        // Kategori
         Route::resource('categories', AdminCategoryController::class);
 
+        // Pesanan
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
-            ->name('orders.updateStatus');
-});
+        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+        Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+    });
 
 //
 // =======================
@@ -193,3 +204,6 @@ use App\Http\Controllers\MidtransNotificationController;
 // ============================================================
 Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
+
+    // Batasi 5 request per menit
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');

@@ -109,8 +109,7 @@ FUNGSI: Master layout admin (Sneat Style)
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
-                        {{-- <a href="{{ route('admin.reports.sales') }}" class="menu-link"> --}}
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.reports.sales') }}" class="menu-link">
                             <i class="menu-icon bx bx-bar-chart"></i>
                             <div>Laporan Penjualan</div>
                         </a>

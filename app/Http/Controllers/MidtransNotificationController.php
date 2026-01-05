@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Events\OrderPaidEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -236,4 +237,13 @@ case 'cancel':
 
         // TODO: Logic tambahan untuk refund
     }
+
+
+private function setSuccess(Order $order)
+{
+    $order->update(['status' => 'success']);
+
+    // Fire & Forget
+    event(new OrderPaidEvent($order));
+}
 }
