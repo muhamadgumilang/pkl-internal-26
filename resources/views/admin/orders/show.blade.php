@@ -11,7 +11,7 @@
                     <h5 class="mb-0 fw-bold">Item Pesanan</h5>
                 </div>
                 <div class="card-body">
-                    @foreach($order->items as $item)
+                    @foreach ($order->items as $item)
                         <div class="d-flex mb-3">
                             <img src="{{ $item->product->image_url }}" class="rounded me-3"
                                 style="width: 60px; height: 60px; object-fit: cover;">
@@ -50,24 +50,37 @@
             <div class="card shadow-sm border-0 bg-light">
                 <div class="card-body">
                     <h6 class="fw-bold mb-3">Update Status Order</h6>
-                    <form 
-                    {{-- action="{{ route('admin.orders.update-status', $order) }}" --}}
-                     method="POST">
+                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST">
                         @csrf
                         @method('PATCH')
 
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Status Saat Ini:
-                                <strong>{{ ucfirst($order->status) }}</strong></label>
+                            <label class="form-label small text-muted">
+                                Status Saat Ini:
+                                <strong>{{ ucfirst($order->status) }}</strong>
+                            </label>
+
                             <select name="status" class="form-select">
-                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing
-                                    (Sedang Dikemas)</option>
-                                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed
-                                    (Selesai/Dikirim)</option>
-                                <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled
-                                    (Batalkan & Restock)</option>
+                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>
+                                    Pending
+                                </option>
+
+                                <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>
+                                    Processing
+                                </option>
+
+                                <option value="completed" {{ $order->status == 'delivered' ? 'selected' : '' }}>
+                                    Completed
+                                </option>
+
+                                <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>
+                                    Cancelled
+                                </option>
                             </select>
+
+                            @error('status')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">
@@ -75,7 +88,8 @@
                         </button>
                     </form>
 
-                    @if($order->status == 'cancelled')
+
+                    @if ($order->status == 'cancelled')
                         <div class="alert alert-danger mt-3 mb-0 small">
                             <i class="bi bi-info-circle"></i> Pesanan ini telah dibatalkan. Stok produk telah dikembalikan
                             otomatis.

@@ -53,18 +53,20 @@
                                 <td>{{ $order->created_at->format('d M Y H:i') }}</td>
                                 <td class="fw-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                                 <td>
-                                    @if($order->status == 'pending')
+                                    @if ($order->status == 'pending')
                                         <span class="badge bg-warning text-dark">Pending</span>
                                     @elseif($order->status == 'processing')
-                                        <span class="badge bg-info text-dark">Diproses</span>
-                                    @elseif($order->status == 'completed')
-                                        <span class="badge bg-success">Selesai</span>
+                                        <span class="badge bg-info text-dark">Processing</span>
+                                    @elseif($order->status == 'delivered')
+                                        <span class="badge bg-success">Completed</span>
                                     @elseif($order->status == 'cancelled')
-                                        <span class="badge bg-danger">Batal</span>
+                                        <span class="badge bg-danger">Cancelled</span>
                                     @endif
                                 </td>
+
                                 <td class="text-end pe-4">
-                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ route('admin.orders.show', $order) }}"
+                                        class="btn btn-sm btn-outline-primary">
                                         Detail
                                     </a>
                                 </td>
