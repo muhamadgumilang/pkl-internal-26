@@ -1,77 +1,121 @@
 /* ================================================
    FILE: resources/css/app.css
    FUNGSI: Entry point untuk semua CSS
+   TEMA: Biru Muda Gradasi Putih
    ================================================ */
 
 /* Import Bootstrap CSS */
-/* Kita import di sini agar ikut ter-compile oleh Vite dan bisa di-minify saat production */
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 /* Import Bootstrap Icons */
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* ================================================
-   CUSTOM STYLES - Variabel dan Override
+   CUSTOM STYLES - Variabel Warna
    ================================================ */
 
 :root {
-    /* Warna Brand Toko */
-    --primary-color: #4f46e5;
-    /* Indigo */
-    --secondary-color: #10b981;
-    /* Emerald */
-    --accent-color: #f59e0b;
-    /* Amber */
+    /* Warna Brand (Biru Muda) */
+    --primary-color: #38bdf8;
+    /* Sky Blue */
+    --primary-light: #e0f2fe;
+    /* Biru sangat muda */
+    --primary-hover: #0ea5e9;
+    /* Biru hover */
+
+    /* Aksen */
+    --secondary-color: #22c55e;
+    --accent-color: #0ea5e9;
 
     /* Warna Text */
-    --text-dark: #1f2937;
-    --text-muted: #6b7280;
-    --text-light: #9ca3af;
-}
-
-/* Override Bootstrap Primary */
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-    background-color: #4338ca;
-    border-color: #4338ca;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
 }
 
 /* ================================================
-   LAYOUT STYLES
+   GLOBAL
    ================================================ */
 
 body {
     font-family: "Inter", system-ui, -apple-system, sans-serif;
     color: var(--text-dark);
+    background-color: #ffffff;
 }
 
-/* Navbar Custom */
+/* ================================================
+   BUTTON
+   ================================================ */
+
+.btn-primary {
+    background: linear-gradient(135deg,
+            var(--primary-color),
+            var(--primary-light));
+    border: none;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg,
+            var(--primary-hover),
+            #bae6fd);
+    color: #0f172a;
+}
+
+/* ================================================
+   NAVBAR
+   ================================================ */
+
+.navbar {
+    background: linear-gradient(90deg,
+            var(--primary-color),
+            var(--primary-light));
+}
+
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
+    color: #0f172a !important;
 }
 
-/* Footer */
-footer {
-    background-color: #1f2937;
-    color: #fff;
+.navbar .nav-link {
+    color: #0f172a !important;
+    font-weight: 500;
 }
 
-/* Card Produk */
+/* ================================================
+   HERO / HEADER SECTION
+   ================================================ */
+
+.hero-section,
+.bg-primary {
+    background: linear-gradient(135deg,
+            var(--primary-color),
+            var(--primary-light)) !important;
+    color: #0f172a;
+}
+
+/* ================================================
+   CARD PRODUK
+   ================================================ */
+
 .product-card {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
+    border: 1px solid #e5f3ff;
+    background-color: #ffffff;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Badge Diskon */
+/* ================================================
+   BADGE DISKON
+   ================================================ */
+
 .badge-discount {
     position: absolute;
     top: 10px;
@@ -79,7 +123,18 @@ footer {
     background-color: #ef4444;
     color: white;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 600;
+}
+
+/* ================================================
+   FOOTER
+   ================================================ */
+
+footer {
+    background: linear-gradient(135deg,
+            var(--primary-color),
+            var(--primary-light));
+    color: #0f172a;
 }

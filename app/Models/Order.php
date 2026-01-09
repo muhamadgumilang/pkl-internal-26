@@ -15,12 +15,14 @@ class Order extends Model
         'user_id',
         'order_number',
         'status',
-        'shipping_name',
-        'shipping_address',
-        'shipping_phone',
+        'payment_status',
         'total_amount',
         'shipping_cost',
-        'snap_token',
+        'shipping_name',
+        'shipping_phone',
+        'shipping_address',
+        'payment_method',
+        'notes',
     ];
 
     public function items()
@@ -32,6 +34,7 @@ class Order extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

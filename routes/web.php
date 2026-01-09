@@ -1,41 +1,43 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
-// =======================
-// CONTROLLERS (PUBLIC)
-// =======================
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CatalogController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\LoginController;
-
-// =======================
-// CONTROLLERS (ADMIN)
-// =======================
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+/*
+|--------------------------------------------------------------------------
+| CONTROLLERS (PUBLIC)
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ReportController;
-
-
-
-// =======================
-// CONTROLLERS (AUTH)
-// =======================
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CheckoutController;
+/*
+|--------------------------------------------------------------------------
+| CONTROLLERS (ADMIN)
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MidtransNotificationController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+/*
+|--------------------------------------------------------------------------
+| CONTROLLERS (AUTH)
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\WishlistController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 //
-// =======================
+// ======================================================================
 // HALAMAN PUBLIK
-// =======================
+// ======================================================================
 //
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -43,50 +45,100 @@ Route::get('/products', [CatalogController::class, 'index'])->name('catalog.inde
 Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 
 //
-// =======================
+// ======================================================================
 // HALAMAN CUSTOMER (LOGIN)
-// =======================
+// ======================================================================
 //
 Route::middleware('auth')->group(function () {
 
-    // Cart
+    /*
+    |--------------------------------------------------------------------------
+    | CART
+    |--------------------------------------------------------------------------
+    */
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/{item}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{item}', [CartController::class, 'remove'])->name('cart.remove');
 
-    // Wishlist
-    // Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    // Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    /*
+    |--------------------------------------------------------------------------
+    | WISHLIST
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
-    // Checkout
+    /*
+    |--------------------------------------------------------------------------
+    | CHECKOUT
+    |--------------------------------------------------------------------------
+    */
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-    // Orders
+    /*
+    |--------------------------------------------------------------------------
+    | ORDERS
+    |--------------------------------------------------------------------------
+    */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-   
-    // Profile
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAYMENT (MIDTRANS)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
+        ->name('orders.pay');
+
+    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
+        ->name('orders.success');
+
+    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
+        ->name('orders.pending');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // ==========================
+    // AVATAR
+    // ==========================
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])
+        ->name('profile.avatar.update');
+
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])
+        ->name('profile.avatar.delete');
+
+    /*
+    |--------------------------------------------------------------------------
+    | GOOGLE ACCOUNT
+    |--------------------------------------------------------------------------
+    */
+    Route::delete('/profile/google/unlink', [ProfileController::class, 'unlinkGoogle'])
+        ->name('profile.google.unlink');
 });
 
 //
-// =======================
+// ======================================================================
 // HALAMAN ADMIN
-// =======================
+// ======================================================================
 //
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        // Admin Dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        // nama route: admin.dashboard
-        // url: /admin/dashboard
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
 
         // Produk
         Route::resource('products', AdminProductController::class);
@@ -95,116 +147,45 @@ Route::middleware(['auth', 'admin'])
         Route::resource('categories', AdminCategoryController::class);
 
         // Pesanan
-        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
-        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
-        
+        Route::get('/orders', [AdminOrderController::class, 'index'])
+            ->name('orders.index');
 
-        Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
-        Route::get('reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
+            ->name('orders.show');
+
+        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
+            ->name('orders.update-status');
+
+        // Laporan
+        Route::get('/reports/sales', [ReportController::class, 'sales'])
+            ->name('reports.sales');
+
+        Route::get('/reports/export-sales', [ReportController::class, 'exportSales'])
+            ->name('reports.export-sales');
     });
 
 //
-// =======================
+// ======================================================================
 // AUTH
-// =======================
+// ======================================================================
+//
 Auth::routes();
 
 // Google Login
-Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
-Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+Route::get('/auth/google', [GoogleController::class, 'redirect'])
+    ->name('auth.google');
 
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
+    ->name('auth.google.callback');
 
-Route::middleware('auth')->group(function() {
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
-});
+// Batasi login 5x per menit
+Route::post('/login', [LoginController::class, 'login'])
+    ->middleware('throttle:5,1');
 
-// routes/web.php (HAPUS SETELAH TESTING!)
-
-// use App\Services\MidtransService;
-
-// Route::get('/debug-midtrans', function () {
-//     // Cek apakah config terbaca
-//     $config = [
-//         'merchant_id'   => config('midtrans.merchant_id'),
-//         'client_key'    => config('midtrans.client_key'),
-//         'server_key'    => config('midtrans.server_key') ? '***SET***' : 'NOT SET',
-//         'is_production' => config('midtrans.is_production'),
-//     ];
-
-//     // Test buat dummy token
-//     try {
-//         $service = new MidtransService();
-
-//         // Buat dummy order untuk testing
-//         $dummyOrder = new \App\Models\Order();
-//         $dummyOrder->order_number = 'TEST-' . time();
-//         $dummyOrder->total_amount = 10000;
-//         $dummyOrder->shipping_cost = 0;
-//         $dummyOrder->shipping_name = 'Test User';
-//         $dummyOrder->shipping_phone = '08123456789';
-//         $dummyOrder->shipping_address = 'Jl. Test No. 123';
-//         $dummyOrder->user = (object) [
-//             'name'  => 'Tester',
-//             'email' => 'test@example.com',
-//             'phone' => '08123456789',
-//         ];
-//         // Dummy items
-//         $dummyOrder->items = collect([
-//             (object) [
-//                 'product_id'   => 1,
-//                 'product_name' => 'Produk Test',
-//                 'price'        => 10000,
-//                 'quantity'     => 1,
-//             ],
-//         ]);
-
-//         $token = $service->createSnapToken($dummyOrder);
-
-//         return response()->json([
-//             'status'  => 'SUCCESS',
-//             'message' => 'Berhasil terhubung ke Midtrans!',
-//             'config'  => $config,
-//             'token'   => $token,
-//         ]);
-
-//     } catch (\Exception $e) {
-//         return response()->json([
-//             'status'  => 'ERROR',
-//             'message' => $e->getMessage(),
-//             'config'  => $config,
-//         ], 500);
-//     }
-// });
-
-// routes/web.php
-
-use App\Http\Controllers\PaymentController;
-
-Route::middleware('auth')->group(function () {
-    // ... routes lainnya
-
-    // Payment Routes
-    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
-        ->name('orders.pay');
-    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
-        ->name('orders.success');
-    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
-        ->name('orders.pending');
-});
-
-// routes/web.php
-
-use App\Http\Controllers\MidtransNotificationController;
-
-// ============================================================
-// MIDTRANS WEBHOOK
-// Route ini HARUS public (tanpa auth middleware)
-// Karena diakses oleh SERVER Midtrans, bukan browser user
-// ============================================================
-Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
+//
+// ======================================================================
+// MIDTRANS WEBHOOK (PUBLIC - TANPA AUTH)
+// ======================================================================
+// Route ini HARUS public karena dipanggil oleh server Midtrans
+Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
-
-    // Batasi 5 request per menit
-Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');

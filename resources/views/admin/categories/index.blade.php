@@ -1,11 +1,11 @@
-{{-- resources/views/admin/categories/index.blade.php --}}
+    {{-- resources/views/admin/categories/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Manajemen Kategori')
 
 @section('content')
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         {{-- Flash Message --}}
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show">
@@ -35,7 +35,7 @@
                                 <th class="ps-4">Nama Kategori</th>
                                 <th class="text-center">Produk</th>
                                 <th class="text-center">Status</th>
-                                <th class="text-end pe-4">Aksi</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,17 +57,17 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge bg-info text-dark">{{ $category->products_count }}</span>
+                                        <span class="badge bg-warning text-dark">{{ $category->products_count }}</span>
                                     </td>
                                     <td class="text-center">
                                         @if($category->is_active)
                                             <span class="badge bg-success">Aktif</span>
                                         @else
-                                            <span class="badge bg-secondary">Non-Aktif</span>
+                                            <span class="badge bg-secondary">Nonaktif</span>
                                         @endif
                                     </td>
-                                    <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-warning me-1"
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary me-1"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{ $category->id }}">
                                             <i class="bi bi-pencil"></i>
@@ -82,10 +82,25 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                {{-- EDIT MODAL per Loop Item --}}
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">Belum ada kategori.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                {{ $categories->links('pagination::bootstrap-5') }}
+            </div>
+        </div>
+    </div>
+</div>
+{{-- EDIT MODAL per Loop Item --}}
+@foreach($categories as $category)
                                 <div class="modal fade" id="editModal{{ $category->id }}" tabindex="-1">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-lg">
                                         <form class="modal-content" action="{{ route('admin.categories.update', $category) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
@@ -115,25 +130,10 @@
                                         </form>
                                     </div>
                                 </div>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">Belum ada kategori.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer bg-white">
-                {{ $categories->links() }}
-            </div>
-        </div>
-    </div>
-</div>
-
+@endforeach
 {{-- CREATE MODAL --}}
 <div class="modal fade" id="createModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form class="modal-content" action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="modal-header">
@@ -150,8 +150,8 @@
                     <input type="file" name="image" class="form-control">
                 </div>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" name="is_active" value="1" checked>
-                    <label class="form-check-label">Langsung Aktifkan</label>
+                    <input class="form-check-input" type="checkbox" name="is_active" value="1"{{ old('is_active') ? 'checked' : '' }}>
+                    <label class="form-check-label">Aktif</label>
                 </div>
             </div>
             <div class="modal-footer">

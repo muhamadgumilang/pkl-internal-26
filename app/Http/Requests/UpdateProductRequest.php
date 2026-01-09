@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -20,9 +21,26 @@ class UpdateProductRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
+            {
+                return [
+                    'name'        => 'required|string|max:255',
+                    'category_id' => 'required|exists:categories,id',
+                    'price'       => 'required|numeric|min:0',
+                    'stock'       => 'required|integer|min:0',
+                    'weight'      => 'required|integer|min:0',
+                    'images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                ];
+            }
+
+
+
+public function update(UpdateProductRequest $request, Product $product)
     {
-        return [
-            //
-        ];
+        $product->update($request->validated());
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil diperbarui!');
     }
+
 }

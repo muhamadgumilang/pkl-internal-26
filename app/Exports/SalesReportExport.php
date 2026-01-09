@@ -3,8 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Order;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -44,7 +44,7 @@ class SalesReportExport implements FromQuery, WithHeadings, WithMapping, WithSty
             'Email',
             'Jumlah Item',
             'Total Belanja (Rp)',
-            'Status'
+            'Status',
         ];
     }
 
