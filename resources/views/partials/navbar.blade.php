@@ -7,7 +7,7 @@
     <div class="container">
         {{-- Logo & Brand --}}
         <a class="navbar-brand text-primary" href="{{ route('home') }}">
-            <i class="bi bi-bag-heart-fill me-2"></i>
+           <i class="bi bi-book"></i>
             TokoOnline
         </a>
 

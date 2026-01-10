@@ -50,6 +50,12 @@
                             <input type="number" name="stock" class="form-control" value="{{ old('stock') }}">
                         </div>
                     </div>
+                    <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">Berat (gram)</label>
+                            <input type="number" name="weight" 
+                                   class="form-control @error('weight') is-invalid @enderror">
+                            @error('weight') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
 
                     {{-- Gambar --}}
                     <div class="mb-3">
