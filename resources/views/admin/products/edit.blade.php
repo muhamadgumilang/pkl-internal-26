@@ -85,6 +85,12 @@
                         <input type="file" name="images[]" multiple class="form-control">
                     </div>
 
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="is_active" value="1"
+                               {{ old('is_active') ? 'checked' : '' }}>
+                         <label class="form-check-label">Aktif</label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-lg w-100">
                         Update Produk
                     </button>

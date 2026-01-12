@@ -50,10 +50,11 @@
                             <input type="number" name="stock" class="form-control" value="{{ old('stock') }}">
                         </div>
                     </div>
+
                     <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Berat (gram)</label>
                             <input type="number" name="weight" 
-                                   class="form-control @error('weight') is-invalid @enderror">
+                                   class="form-control @error('weight') is-invalid @enderror"
                             @error('weight') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
@@ -61,6 +62,12 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Upload Gambar</label>
                         <input type="file" name="images[]" multiple class="form-control">
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="is_active" value="1"
+                               {{ old('is_active') ? 'checked' : '' }}>
+                         <label class="form-check-label">Aktif</label>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg w-100">Simpan Produk</button>

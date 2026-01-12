@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-
 // app/Http/Controllers/Admin/ProductController.php
 
 namespace App\Http\Controllers\Admin;
@@ -187,23 +186,33 @@ class ProductController extends Controller
      * Menghapus produk.
      */
     public function destroy(Product $product): RedirectResponse
-    {
-        try {
-            // Loop dan hapus semua file gambar fisik dari server.
+{
+    try {
+        DB::transaction(function () use ($product) {
+
+            // 1️⃣ HAPUS ORDER ITEMS TERLEBIH DAHULU
+            $product->orderItems()->delete();
+
+            // 2️⃣ HAPUS FILE GAMBAR FISIK
             foreach ($product->images as $image) {
                 Storage::disk('public')->delete($image->image_path);
             }
 
-            // Hapus record produk dari database.
-            // Relasi lain (seperti cart_items atau order_items) mungkin perlu dicek
-            // atau gunakan SoftDeletes jika ingin data aman. Di sini kita Hard Delete.
-            $product->delete();
+            // 3️⃣ HAPUS DATA GAMBAR DI DATABASE
+            $product->images()->delete();
 
-            return redirect()->route('admin.products.index')->with('success', 'Produk dihapus!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
-        }
+            // 4️⃣ HAPUS PRODUK
+            $product->delete();
+        });
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk dan order item berhasil dihapus!');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
     }
+}
+
 
     // --- Helper Methods ---
     // Method protected agar tidak bisa diakses via URL/Route, hanya internal class ini.

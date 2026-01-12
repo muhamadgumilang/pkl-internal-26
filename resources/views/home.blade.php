@@ -17,7 +17,7 @@
                         Belanja Online Mudah & Terpercaya
                     </h1>
                     <p class="lead mb-4">
-                        Temukan berbagai produk berkualitas dengan harga terbaik.
+                        Temukan berbagai Komik yang berkualitas dengan harga terbaik.
                         Gratis ongkir untuk pembelian pertama!
                     </p>
                     <a href="{{ route('catalog.index') }}" class="btn btn-light btn-lg">

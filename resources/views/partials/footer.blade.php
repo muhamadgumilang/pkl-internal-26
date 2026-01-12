@@ -9,10 +9,10 @@
             {{-- Brand & Description --}}
             <div class="col-lg-4 col-md-6">
                 <h5 class="text-white mb-3">
-                    <i class="bi bi-bag-heart-fill me-2"></i>TokoOnline
+                    <i class="bi bi-bag-heart-fill me-2"></i>Toko Komik Online
                 </h5>
                 <p class="text-secondary">
-                    Toko online terpercaya dengan berbagai produk berkualitas.
+                    Toko Komik online terpercaya dengan berbagai produk berkualitas.
                     Belanja mudah, aman, dan nyaman.
                 </p>
                 <div class="d-flex gap-3 mt-3">
@@ -63,7 +63,7 @@
                 <ul class="list-unstyled text-secondary">
                     <li class="mb-2">
                         <i class="bi bi-geo-alt me-2"></i>
-                        Jl. Contoh No. 123, Bandung
+                        Jl. Bojong Suren Rt03/11, Bandung
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-telephone me-2"></i>

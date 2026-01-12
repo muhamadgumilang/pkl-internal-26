@@ -7,8 +7,8 @@
     <div class="container">
         {{-- Logo & Brand --}}
         <a class="navbar-brand text-primary" href="{{ route('home') }}">
-           <i class="bi bi-book"></i>
-            TokoOnline
+           <img src="{{ asset('images/logo.png') }}" alt="Logo" width="40" class="me-2" style="object-fit: contain;">
+            Toko Komik Online
         </a>
 
         {{-- Mobile Toggle --}}

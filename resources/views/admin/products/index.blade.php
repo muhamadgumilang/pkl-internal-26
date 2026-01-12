@@ -37,6 +37,8 @@
                             <button type="submit" class="btn btn-sm btn-danger"
                                 onclick="return confirm('Yakin ingin menghapus produk ini?')">Hapus</button>
                         </form>
+
+                        
                     </td>
                 </tr>
                 @endforeach

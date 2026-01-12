@@ -162,6 +162,8 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/reports/export-sales', [ReportController::class, 'exportSales'])
             ->name('reports.export-sales');
+        
+        
     });
 
 //
