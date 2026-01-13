@@ -59,6 +59,12 @@
                         </option>
                         <option value="price_desc" {{ request('sort')=='price_desc' ? 'selected' : '' }}>Harga Tertinggi
                         </option>
+                        <option value="name_asc" {{ request('sort')=='name_asc' ? 'selected' : '' }}>A-Z
+                        </option>
+                        <option value="name_desc" {{ request('sort')=='name_desc' ? 'selected' : '' }}>Z-A
+                        </option>
+                       
+                       
                     </select>
                 </form>
             </div>
